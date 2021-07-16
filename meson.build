@@ -1,3 +1,3 @@
 project('SpectrumAnalyzerAnimator', 'cpp')
-executable('SpectrumAnalyzerAnimator', 'SpectrumAnalyzerAnimator.cpp')
+executable('SpectrumAnalyzerAnimator', 'src/SpectrumAnalyzerAnimator.cpp')
 
