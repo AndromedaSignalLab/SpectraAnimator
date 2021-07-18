@@ -1,0 +1,9 @@
+/*
+ * SpectrumAnalyzerAnimator.hpp
+ *
+ *  Created on: Jul 15, 2021
+ *      Author: Volkan Orhan
+ */
+#pragma once
+
+#include "SpectrumAnalyzerAnimatorDefinitions.hpp"
