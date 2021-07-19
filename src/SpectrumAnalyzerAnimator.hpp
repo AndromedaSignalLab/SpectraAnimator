@@ -35,6 +35,9 @@ public:
 	void setFallingAnimationType(AnimationType fallingAnimationType);
 	void setRaisingAnimationType(AnimationType raisingAnimationType);
 
+	void setFallingMovementProperties(MovementProperties fallingMovementProperties);
+	void setRaisingMovementProperties(MovementProperties raisingMovementProperties);
+
 private:
 	void updateMovements();
 	void updateTimePoints();

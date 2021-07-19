@@ -41,6 +41,28 @@ void SpectrumAnalyzerAnimator<T>::setFallingAnimationType(AnimationType fallingA
 }
 
 template<typename T>
+AnimationType SpectrumAnalyzerAnimator<T>::getRaisingAnimationType() const {
+	return raisingAnimationType;
+}
+
+template<typename T>
+inline void SpectrumAnalyzerAnimator<T>::setFallingMovementProperties(
+		MovementProperties fallingMovementProperties) {
+	this->fallingMovementProperties = fallingMovementProperties;
+}
+
+template<typename T>
+inline void SpectrumAnalyzerAnimator<T>::setRaisingMovementProperties(
+		MovementProperties raisingMovementProperties) {
+	this->raisingMovementProperties = raisingMovementProperties;
+}
+
+template<typename T>
+void SpectrumAnalyzerAnimator<T>::setRaisingAnimationType(AnimationType raisingAnimationType) {
+	this->raisingAnimationType = raisingAnimationType;
+}
+
+template<typename T>
 PeakIndicatorType SpectrumAnalyzerAnimator<T>::getPeakIndicatorType() const {
 	return peakIndicatorType;
 }
@@ -48,11 +70,6 @@ PeakIndicatorType SpectrumAnalyzerAnimator<T>::getPeakIndicatorType() const {
 template<typename T>
 void SpectrumAnalyzerAnimator<T>::setPeakIndicatorType(PeakIndicatorType peakIndicatorType) {
 	this->peakIndicatorType = peakIndicatorType;
-}
-
-template<typename T>
-AnimationType SpectrumAnalyzerAnimator<T>::getRaisingAnimationType() const {
-	return raisingAnimationType;
 }
 
 template<typename T>
@@ -122,11 +139,6 @@ inline void SpectrumAnalyzerAnimator<T>::getValues(T values[]) {
 	for(size_t i=0; i<bandAmount; i++)
 		values[i] = movements[i].displacement;
 	valueSettingMutex.unlock();
-}
-
-template<typename T>
-void SpectrumAnalyzerAnimator<T>::setRaisingAnimationType(AnimationType raisingAnimationType) {
-	this->raisingAnimationType = raisingAnimationType;
 }
 
 template<typename T>
