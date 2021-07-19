@@ -45,7 +45,7 @@ enum class MovementType {
  */
 struct MovementProperties {
 	double acceleration;
-	double velocity;
+	double initialVelocity;
 };
 
 template<typename T>

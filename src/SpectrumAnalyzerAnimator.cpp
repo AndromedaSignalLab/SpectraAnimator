@@ -17,15 +17,15 @@ void printArray(int len, double values[]) {
 
 int main(int argc, char **argv) {
 	SpectrumAnalyzerAnimator<double> animator(5,0,1);
-	animator.setFallingAnimationType(AnimationType::ConstantVelocity);
+	animator.setFallingAnimationType(AnimationType::ConstantAcceleration);
 	animator.setRaisingAnimationType(AnimationType::ConstantVelocity);
 
 	MovementProperties r, f;
 	r.acceleration = 0;
-	r.velocity = 0.1;
+	r.initialVelocity = 0.1;
 
-	f.acceleration = 0;
-	f.velocity = -0.1;
+	f.acceleration = -0.3;
+	//f.initialVelocity = -0.3;
 
 	animator.setFallingMovementProperties(f);
 	animator.setRaisingMovementProperties(r);
@@ -37,9 +37,9 @@ int main(int argc, char **argv) {
 	int i=0;
 	double returnValues[5];
 	while(true) {
-		std::cout<<i<<std::endl;
+		//std::cout<<i<<std::endl;
 		i++;
-		std::this_thread::sleep_for(std::chrono::milliseconds(250));
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
 		animator.getValues(returnValues);
 		printArray(5, returnValues);

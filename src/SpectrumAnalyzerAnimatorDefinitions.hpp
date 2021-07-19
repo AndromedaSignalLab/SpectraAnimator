@@ -175,7 +175,7 @@ inline void SpectrumAnalyzerAnimator<T>::updateMovements() {
 		if(movement.movementType == MovementType::Raising) {
 			switch(raisingAnimationType) {
 				case AnimationType::ConstantVelocity: {
-					movement.displacement += PhysicsUtil::calculateDisplacementDelta(raisingMovementProperties.velocity, lastDuration);
+					movement.displacement += PhysicsUtil::calculateDisplacementDelta(raisingMovementProperties.initialVelocity, lastDuration);
 					if(movement.displacement >= movement.targetDisplacement) {
 						movement.displacement = movement.targetDisplacement;
 						startFalling(movement);
@@ -200,7 +200,7 @@ inline void SpectrumAnalyzerAnimator<T>::updateMovements() {
 		else if(movement.movementType == MovementType::Falling) {
 			switch(fallingAnimationType) {
 				case AnimationType::ConstantVelocity: {
-					movement.displacement += PhysicsUtil::calculateDisplacementDelta(fallingMovementProperties.velocity, lastDuration);
+					movement.displacement += PhysicsUtil::calculateDisplacementDelta(fallingMovementProperties.initialVelocity, lastDuration);
 					if(movement.displacement <= movement.targetDisplacement) {
 						movement.displacement = movement.targetDisplacement;
 						movement.movementType = MovementType::Stationary;
@@ -210,8 +210,8 @@ inline void SpectrumAnalyzerAnimator<T>::updateMovements() {
 				}
 				case AnimationType::ConstantAcceleration: {
 					double previousVelocity = movement.velocityWithAcceleration;
-					movement.velocityWithAcceleration = PhysicsUtil::calculateVelocity(movement.velocityWithAcceleration, raisingMovementProperties.acceleration, lastDuration);
-					movement.displacement += PhysicsUtil::calculateDisplacementDelta(previousVelocity, raisingMovementProperties.acceleration, lastDuration);
+					movement.velocityWithAcceleration = PhysicsUtil::calculateVelocity(movement.velocityWithAcceleration, fallingMovementProperties.acceleration, lastDuration);
+					movement.displacement += PhysicsUtil::calculateDisplacementDelta(previousVelocity, fallingMovementProperties.acceleration, lastDuration);
 					if(movement.displacement <= movement.targetDisplacement) {
 						movement.displacement = movement.targetDisplacement;
 						movement.movementType = MovementType::Stationary;
