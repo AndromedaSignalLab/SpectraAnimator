@@ -76,6 +76,7 @@ template<typename T>
 inline SpectrumAnalyzerAnimator<T>::SpectrumAnalyzerAnimator(size_t bandAmount,
 		T minValue, T maxValue) {
 	this->bandAmount = bandAmount;
+	this->movements = new Movement<T>[bandAmount];
 	this->minValue = minValue;
 	this->maxValue = maxValue;
 	setFallingAnimationType(AnimationType::ConstantVelocity);
@@ -121,11 +122,13 @@ inline void SpectrumAnalyzerAnimator<T>::stop() {
 template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::setValues(T values[]) {
 	valueSettingMutex.lock();
+
 	for(size_t i=0; i<bandAmount; i++) {
 		Movement<T> &movement = movements[i];
 		T valueToBeSet = values[i];
 
 		if(valueToBeSet > movement.targetDisplacement) { //higher value to be set
+			movement.movementType = MovementType::Raising;
 			movement.targetDisplacement = valueToBeSet;
 		}
 	}
@@ -152,12 +155,12 @@ inline void SpectrumAnalyzerAnimator<T>::updateTimePoints() {
 template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::startFalling(Movement<T> &movement) {
 	movement.targetDisplacement = 0;
+	movement.movementType = MovementType::Falling;
 	switch(fallingAnimationType) {
 		case AnimationType::ConstantVelocity:
-			movement.velocity = fallingMovementProperties.velocity;
 			break;
 		case AnimationType::ConstantAcceleration:
-			movement.velocity = 0;
+			movement.velocityWithAcceleration = 0;
 			break;
 		case AnimationType::NoAnimation:
 			break;
@@ -167,12 +170,12 @@ inline void SpectrumAnalyzerAnimator<T>::startFalling(Movement<T> &movement) {
 template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::updateMovements() {
 	updateTimePoints();
-	for(int i=0; i<bandAmount; i++) {
+	for(size_t i=0; i<bandAmount; i++) {
 		Movement<T> &movement = movements[i];
-		if(movement.velocity > 0) {//Raising
+		if(movement.movementType == MovementType::Raising) {
 			switch(raisingAnimationType) {
 				case AnimationType::ConstantVelocity: {
-					movement.displacement = PhysicsUtil::calculateDisplacementDelta(raisingMovementProperties.velocity, lastDuration);
+					movement.displacement += PhysicsUtil::calculateDisplacementDelta(raisingMovementProperties.velocity, lastDuration);
 					if(movement.displacement >= movement.targetDisplacement) {
 						movement.displacement = movement.targetDisplacement;
 						startFalling(movement);
@@ -180,9 +183,9 @@ inline void SpectrumAnalyzerAnimator<T>::updateMovements() {
 					break;
 				}
 				case AnimationType::ConstantAcceleration: {
-					double previousVelocity = movement.velocity;
-					movement.velocity = PhysicsUtil::calculateVelocity(movement.velocity, raisingMovementProperties.acceleration, lastDuration);
-					movement.displacement = PhysicsUtil::calculateDisplacementDelta(previousVelocity, raisingMovementProperties.acceleration, lastDuration);
+					double previousVelocity = movement.velocityWithAcceleration;
+					movement.velocityWithAcceleration = PhysicsUtil::calculateVelocity(movement.velocityWithAcceleration, raisingMovementProperties.acceleration, lastDuration);
+					movement.displacement += PhysicsUtil::calculateDisplacementDelta(previousVelocity, raisingMovementProperties.acceleration, lastDuration);
 					if(movement.displacement >= movement.targetDisplacement) {
 						movement.displacement = movement.targetDisplacement;
 						startFalling(movement);
@@ -194,22 +197,24 @@ inline void SpectrumAnalyzerAnimator<T>::updateMovements() {
 					break;
 			}
 		}
-		else if(movement.velocity < 0){//Falling
+		else if(movement.movementType == MovementType::Falling) {
 			switch(fallingAnimationType) {
 				case AnimationType::ConstantVelocity: {
 					movement.displacement += PhysicsUtil::calculateDisplacementDelta(fallingMovementProperties.velocity, lastDuration);
-					if(movement.displacement >= movement.targetDisplacement) {
+					if(movement.displacement <= movement.targetDisplacement) {
 						movement.displacement = movement.targetDisplacement;
-						startFalling(movement);
+						movement.movementType = MovementType::Stationary;
+
 					}
 					break;
 				}
 				case AnimationType::ConstantAcceleration: {
-					double previousVelocity = movement.velocity;
-					movement.velocity = PhysicsUtil::calculateVelocity(movement.velocity, raisingMovementProperties.acceleration, lastDuration);
+					double previousVelocity = movement.velocityWithAcceleration;
+					movement.velocityWithAcceleration = PhysicsUtil::calculateVelocity(movement.velocityWithAcceleration, raisingMovementProperties.acceleration, lastDuration);
 					movement.displacement += PhysicsUtil::calculateDisplacementDelta(previousVelocity, raisingMovementProperties.acceleration, lastDuration);
 					if(movement.displacement <= movement.targetDisplacement) {
 						movement.displacement = movement.targetDisplacement;
+						movement.movementType = MovementType::Stationary;
 					}
 					break;
 				}
@@ -218,7 +223,7 @@ inline void SpectrumAnalyzerAnimator<T>::updateMovements() {
 					break;
 			}
 		}
-		else {//Movement Finished
+		else { //Stationary
 			//Do nothing
 		}
 	}

@@ -16,7 +16,7 @@ void printArray(int len, double values[]) {
 }
 
 int main(int argc, char **argv) {
-	SpectrumAnalyzerAnimator<double> animator(5,0,100);
+	SpectrumAnalyzerAnimator<double> animator(5,0,1);
 	animator.setFallingAnimationType(AnimationType::ConstantVelocity);
 	animator.setRaisingAnimationType(AnimationType::ConstantVelocity);
 
@@ -34,18 +34,19 @@ int main(int argc, char **argv) {
 	printArray(5, values);
 	animator.setValues(values);
 
-
 	int i=0;
 	double returnValues[5];
 	while(true) {
+		std::cout<<i<<std::endl;
 		i++;
 		std::this_thread::sleep_for(std::chrono::milliseconds(250));
+
 		animator.getValues(returnValues);
 		printArray(5, returnValues);
-		if(i<1000)
+		if(!(returnValues[0] || returnValues[1] || returnValues[2] || returnValues[3] || returnValues[4]))
 			break;
 	}
 
-	cout<<"Hello World";
+
 	return 0;
 }

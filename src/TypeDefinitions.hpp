@@ -31,11 +31,12 @@ enum class PeakIndicatorType {
 	WithAnimation
 };
 
-/*
+
 enum class MovementType {
-	Falling,
-	Raising
-};*/
+	Stationary,
+	Raising,
+	Falling
+};
 
 /**
  * Velocity unit is 1 bar height per second.
@@ -49,8 +50,8 @@ struct MovementProperties {
 
 template<typename T>
 struct Movement {
-	//MovementType movementType;
-	T velocity;
-	T displacement;
-	T targetDisplacement;
+	MovementType movementType = MovementType::Stationary;
+	T velocityWithAcceleration = 0; //ignored for constant velocity
+	T displacement = 0;
+	T targetDisplacement = 0;
 };
