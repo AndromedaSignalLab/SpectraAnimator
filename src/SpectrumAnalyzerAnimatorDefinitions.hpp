@@ -8,6 +8,7 @@
 #pragma once
 
 #include "SpectrumAnalyzerAnimator.hpp"
+#include "PhysicsUtil.hpp"
 
 template<typename T>
 T SpectrumAnalyzerAnimator<T>::getMaxValue() const {
@@ -54,7 +55,6 @@ AnimationType SpectrumAnalyzerAnimator<T>::getRaisingAnimationType() const {
 	return raisingAnimationType;
 }
 
-
 template<typename T>
 inline SpectrumAnalyzerAnimator<T>::SpectrumAnalyzerAnimator(size_t bandAmount,
 		T minValue, T maxValue) {
@@ -89,7 +89,7 @@ inline size_t SpectrumAnalyzerAnimator<T>::getBandAmount() const {
 template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::start() {
 	if(!running) {
-		this->timePoint = std::chrono::system_clock::now();
+		updateTimePoints();
 		running = true;
 	}
 }
@@ -97,7 +97,6 @@ inline void SpectrumAnalyzerAnimator<T>::start() {
 template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::stop() {
 	if(running) {
-		this->timePoint = 0;
 		running = false;
 	}
 }
@@ -128,6 +127,84 @@ void SpectrumAnalyzerAnimator<T>::setRaisingAnimationType(AnimationType raisingA
 }
 
 template<typename T>
-inline void SpectrumAnalyzerAnimator<T>::updateMovements() {
+inline void SpectrumAnalyzerAnimator<T>::updateTimePoints() {
+	previousTimePoint = currentTimePoint;
+	currentTimePoint = Clock::now();
+	Duration duration = currentTimePoint - previousTimePoint;
+	lastDuration = duration.count();
+}
 
+template<typename T>
+inline void SpectrumAnalyzerAnimator<T>::startFalling(Movement<T> &movement) {
+	movement.targetDisplacement = 0;
+	switch(fallingAnimationType) {
+		case AnimationType::ConstantVelocity:
+			movement.velocity = fallingMovementProperties.velocity;
+			break;
+		case AnimationType::ConstantAcceleration:
+			movement.velocity = 0;
+			break;
+		case AnimationType::NoAnimation:
+			break;
+	}
+}
+
+template<typename T>
+inline void SpectrumAnalyzerAnimator<T>::updateMovements() {
+	updateTimePoints();
+	for(int i=0; i<bandAmount; i++) {
+		Movement<T> &movement = movements[i];
+		if(movement.velocity > 0) {//Raising
+			switch(raisingAnimationType) {
+				case AnimationType::ConstantVelocity: {
+					movement.displacement = PhysicsUtil::calculateDisplacementDelta(raisingMovementProperties.velocity, lastDuration);
+					if(movement.displacement >= movement.targetDisplacement) {
+						movement.displacement = movement.targetDisplacement;
+						startFalling(movement);
+					}
+					break;
+				}
+				case AnimationType::ConstantAcceleration: {
+					double previousVelocity = movement.velocity;
+					movement.velocity = PhysicsUtil::calculateVelocity(movement.velocity, raisingMovementProperties.acceleration, lastDuration);
+					movement.displacement = PhysicsUtil::calculateDisplacementDelta(previousVelocity, raisingMovementProperties.acceleration, lastDuration);
+					if(movement.displacement >= movement.targetDisplacement) {
+						movement.displacement = movement.targetDisplacement;
+						startFalling(movement);
+					}
+					break;
+				}
+				case AnimationType::NoAnimation:
+					//Do nothing
+					break;
+			}
+		}
+		else if(movement.velocity < 0){//Falling
+			switch(fallingAnimationType) {
+				case AnimationType::ConstantVelocity: {
+					movement.displacement += PhysicsUtil::calculateDisplacementDelta(fallingMovementProperties.velocity, lastDuration);
+					if(movement.displacement >= movement.targetDisplacement) {
+						movement.displacement = movement.targetDisplacement;
+						startFalling(movement);
+					}
+					break;
+				}
+				case AnimationType::ConstantAcceleration: {
+					double previousVelocity = movement.velocity;
+					movement.velocity = PhysicsUtil::calculateVelocity(movement.velocity, raisingMovementProperties.acceleration, lastDuration);
+					movement.displacement += PhysicsUtil::calculateDisplacementDelta(previousVelocity, raisingMovementProperties.acceleration, lastDuration);
+					if(movement.displacement <= movement.targetDisplacement) {
+						movement.displacement = movement.targetDisplacement;
+					}
+					break;
+				}
+				case AnimationType::NoAnimation:
+					//Do nothing
+					break;
+			}
+		}
+		else {//Movement Finished
+			//Do nothing
+		}
+	}
 }

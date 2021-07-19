@@ -37,11 +37,14 @@ public:
 
 private:
 	void updateMovements();
+	void updateTimePoints();
+	void startFalling(Movement<T> &movement);
 	size_t bandAmount;
 	AnimationType raisingAnimationType, fallingAnimationType;
 	MovementProperties raisingMovementProperties, fallingMovementProperties;
 	PeakIndicatorType peakIndicatorType;
-	TimePoint timePoint;
+	TimePoint previousTimePoint, currentTimePoint;
+	double lastDuration;
 	T minValue, maxValue;
 	Movement<T> * movements;
 	bool running;

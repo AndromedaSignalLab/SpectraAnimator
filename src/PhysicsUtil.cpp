@@ -12,11 +12,11 @@ namespace PhysicsUtil {
 		return lastVelocity + acceleration * timePassed;
 	}
 
-	double calculateDisplacement(double velocity, double timePassed) {
+	double calculateDisplacementDelta(double velocity, double timePassed) {
 		return velocity * timePassed;
 	}
 
-	double calculateDisplacement(double lastVelocity, double acceleration, double timePassed) {
+	double calculateDisplacementDelta(double lastVelocity, double acceleration, double timePassed) {
 		return lastVelocity*timePassed + 0.5 * acceleration * timePassed * timePassed;
 	}
 }

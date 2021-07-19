@@ -11,10 +11,13 @@
 #include <chrono>
 
 //if mac
-typedef std::chrono::time_point<std::chrono::system_clock> TimePoint;
+//typedef std::chrono::time_point<std::chrono::system_clock> TimePoint;
 //else
 //typedef std::chrono::time_point<std::chrono::steady_clock> TimePoint;
 typedef std::chrono::duration<double> Duration;
+typedef std::chrono::high_resolution_clock Clock;
+
+typedef std::chrono::time_point<std::chrono::high_resolution_clock> TimePoint;
 
 enum class AnimationType {
 	NoAnimation,
