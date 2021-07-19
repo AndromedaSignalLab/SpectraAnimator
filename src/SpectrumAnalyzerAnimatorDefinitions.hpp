@@ -105,8 +105,11 @@ template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::setValues(T values[]) {
 	valueSettingMutex.lock();
 	for(size_t i=0; i<bandAmount; i++) {
-		if(values[i] > movements[i].displacement) { //higher value is set
-			movements[i].velocity = raisingMovementProperties.velocity;
+		Movement<T> &movement = movements[i];
+		T valueToBeSet = values[i];
+
+		if(valueToBeSet > movement.targetDisplacement) { //higher value to be set
+			movement.targetDisplacement = valueToBeSet;
 		}
 	}
 	valueSettingMutex.unlock();
