@@ -12,4 +12,5 @@ namespace PhysicsUtil {
 	double calculateVelocity(double lastVelocity, double acceleration, double timePassed);
 	double calculateDisplacementDelta(double velocity, double timePassed);
 	double calculateDisplacementDelta(double lastVelocity, double acceleration, double timePassed);
+	double calculateInitialVelocity(double totalDisplacementDelta, double acceleration);
 };

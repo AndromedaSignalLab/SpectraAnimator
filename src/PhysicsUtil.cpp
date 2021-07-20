@@ -6,6 +6,7 @@
  */
 
 #include "PhysicsUtil.hpp"
+#include <cmath>
 
 namespace PhysicsUtil {
 	double calculateVelocity(double lastVelocity, double acceleration, double timePassed) {
@@ -18,5 +19,10 @@ namespace PhysicsUtil {
 
 	double calculateDisplacementDelta(double lastVelocity, double acceleration, double timePassed) {
 		return lastVelocity*timePassed + 0.5 * acceleration * timePassed * timePassed;
+	}
+
+	double calculateInitialVelocity(double totalDisplacementDelta, double acceleration) {
+		//V₀ = √(2Xa)
+		return std::sqrt(totalDisplacementDelta*acceleration*2.0);
 	}
 }
