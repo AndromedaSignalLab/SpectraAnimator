@@ -19,8 +19,8 @@ typedef std::chrono::high_resolution_clock Clock;
 
 typedef std::chrono::time_point<std::chrono::high_resolution_clock> TimePoint;
 
-enum class AnimationType {
-	NoAnimation,
+enum class MotionType {
+	Instant,//Jumpy
 	ConstantAcceleration,
 	ConstantVelocity
 };
@@ -28,11 +28,10 @@ enum class AnimationType {
 enum class PeakIndicatorType {
 	NoPeakIndicator,
 	Vanishing,
-	WithAnimation
+	WithMotion
 };
 
-
-enum class MovementType {
+enum class MotionRotation {
 	Stationary,
 	Raising,
 	Falling
@@ -43,14 +42,15 @@ enum class MovementType {
  * For example, 0.5 means bar goes to its half height from zero in a second.
  * -0.5 means velocity has opposite direction (from up to bottom direction)
  */
-struct MovementProperties {
-	double acceleration;
-	double initialVelocity;
+struct MotionProperties {
+	MotionType motionType;
+	double acceleration = 0.0;
+	double initialVelocity = 0.0;
 };
 
 template<typename T>
-struct Movement {
-	MovementType movementType = MovementType::Stationary;
+struct Motion {
+	MotionRotation motionRotation = MotionRotation::Stationary;
 	T velocityWithAcceleration = 0; //ignored for constant velocity
 	T displacement = 0;
 	T targetDisplacement = 0;

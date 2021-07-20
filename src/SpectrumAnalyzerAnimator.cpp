@@ -17,18 +17,18 @@ void printArray(int len, double values[]) {
 
 int main(int argc, char **argv) {
 	SpectrumAnalyzerAnimator<double> animator(5,0,1);
-	animator.setFallingAnimationType(AnimationType::ConstantAcceleration);
-	animator.setRaisingAnimationType(AnimationType::ConstantVelocity);
 
-	MovementProperties r, f;
+	MotionProperties r, f;
 	r.acceleration = 0;
 	r.initialVelocity = 0.1;
+	r.motionType = MotionType::ConstantVelocity;
 
 	f.acceleration = -0.3;
+	f.motionType = MotionType::ConstantAcceleration;
 	//f.initialVelocity = -0.3;
 
-	animator.setFallingMovementProperties(f);
-	animator.setRaisingMovementProperties(r);
+	animator.setFallingMotionProperties(f);
+	animator.setRaisingMotionProperties(r);
 	animator.start();
 	double values[] = {1, 0.5, 0.3, 0.2, 0.7};
 	printArray(5, values);

@@ -29,27 +29,21 @@ public:
 	PeakIndicatorType getPeakIndicatorType() const;
 	void setPeakIndicatorType(PeakIndicatorType peakIndicatorType);
 
-	AnimationType getFallingAnimationType() const;
-	AnimationType getRaisingAnimationType() const;
-
-	void setFallingAnimationType(AnimationType fallingAnimationType);
-	void setRaisingAnimationType(AnimationType raisingAnimationType);
-
-	void setFallingMovementProperties(MovementProperties fallingMovementProperties);
-	void setRaisingMovementProperties(MovementProperties raisingMovementProperties);
+	void setFallingMotionProperties(MotionProperties fallingMotionProperties);
+	void setRaisingMotionProperties(MotionProperties raisingMotionProperties);
 
 private:
-	void updateMovements();
+	void updateMotions();
 	void updateTimePoints();
-	void startFalling(Movement<T> &movement);
+	void startFalling(Motion<T> &movement);
+	void startMovement(Motion<T> &movement, T targetDisplacement);
 	size_t bandAmount;
-	AnimationType raisingAnimationType, fallingAnimationType;
-	MovementProperties raisingMovementProperties, fallingMovementProperties;
+	MotionProperties raisingMotionProperties, fallingMotionProperties;
 	PeakIndicatorType peakIndicatorType;
 	TimePoint previousTimePoint, currentTimePoint;
 	double lastDuration;
 	T minValue, maxValue;
-	Movement<T> * movements;
+	Motion<T> * motions;
 	bool running;
 	std::mutex valueSettingMutex;
 };
