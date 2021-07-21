@@ -14,5 +14,5 @@ public:
 	static T calculateVelocity(T lastVelocity, T acceleration, T timePassed);
 	static T calculateDisplacementDelta(T velocity, T timePassed);
 	static T calculateDisplacementDelta(T lastVelocity, T acceleration, T timePassed);
-	static T calculateInitialVelocity(T totalDisplacementDelta, T acceleration);
+	static T calculateInitialVelocity(T distance, T acceleration);
 };

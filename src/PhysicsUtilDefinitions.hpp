@@ -24,7 +24,7 @@ T PhysicsUtil<T>::calculateDisplacementDelta(T lastVelocity, T acceleration, T t
 }
 
 template<typename T>
-T PhysicsUtil<T>::calculateInitialVelocity(T totalDisplacementDelta, T acceleration) {
+T PhysicsUtil<T>::calculateInitialVelocity(T distance, T acceleration) {
 	//V₀ = √(2Xa)
-	return std::sqrt(totalDisplacementDelta*acceleration*2.0);
+	return std::sqrt(distance*acceleration*2.0);
 }
