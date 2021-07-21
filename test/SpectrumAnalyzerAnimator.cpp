@@ -42,7 +42,9 @@ int main(int argc, char **argv) {
 
 		animator.getValues(returnValues);
 		printArray(5, returnValues);
-		if(!(returnValues[0] || returnValues[1] || returnValues[2] || returnValues[3] || returnValues[4]))
+		if(returnValues[0] == animator.getMinValue() && returnValues[1] == animator.getMinValue() &&
+		   returnValues[2] == animator.getMinValue() && returnValues[3] == animator.getMinValue() &&
+		   returnValues[4] == animator.getMinValue())
 			break;
 	}
 
