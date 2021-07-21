@@ -149,7 +149,7 @@ inline void SpectrumAnalyzerAnimator<T>::setValues(T values[]) {
 			}
 			case MotionRotation::Stationary: {
 				// Case 5
-				motion.displacement = 0;
+				motion.displacement = minValue;
 				startMotion(motion, valueToBeSet);
 				break;
 			}
@@ -194,7 +194,7 @@ inline void SpectrumAnalyzerAnimator<T>::updateTimePoints() {
 
 template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::startFalling(Motion<T> &motion) {
-	motion.targetDisplacement = 0;
+	motion.targetDisplacement = minValue;
 	motion.motionRotation = MotionRotation::Falling;
 	switch(fallingMotionProperties.motionType) {
 		case MotionType::ConstantVelocity:
