@@ -1,7 +1,6 @@
-// Simple Hello World program
 #include <iostream>
 
-#include "SpectrumAnalyzerAnimator"
+#include "../src/SpectrumAnalyzerAnimator"
 #include <thread>
 #include <chrono>
 

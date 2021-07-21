@@ -8,9 +8,11 @@
 #pragma once
 #include <cstddef>
 
-namespace PhysicsUtil {
-	double calculateVelocity(double lastVelocity, double acceleration, double timePassed);
-	double calculateDisplacementDelta(double velocity, double timePassed);
-	double calculateDisplacementDelta(double lastVelocity, double acceleration, double timePassed);
-	double calculateInitialVelocity(double totalDisplacementDelta, double acceleration);
+template<typename T>
+class PhysicsUtil {
+public:
+	static T calculateVelocity(T lastVelocity, T acceleration, T timePassed);
+	static T calculateDisplacementDelta(T velocity, T timePassed);
+	static T calculateDisplacementDelta(T lastVelocity, T acceleration, T timePassed);
+	static T calculateInitialVelocity(T totalDisplacementDelta, T acceleration);
 };
