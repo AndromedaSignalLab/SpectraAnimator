@@ -61,7 +61,8 @@ inline SpectrumAnalyzerAnimator<T>::SpectrumAnalyzerAnimator(size_t bandAmount,
 	this->maxValue = maxValue;
 	fallingMotionProperties.motionType = MotionType::ConstantVelocity;
 	raisingMotionProperties.motionType = MotionType::ConstantVelocity;
-	//this->timePoint = 0;
+	this->lastDuration = 0.0;
+	this->peakIndicatorType = PeakIndicatorType::NoPeakIndicator;
 	this->running = false;
 }
 
