@@ -118,14 +118,16 @@ inline void SpectrumAnalyzerAnimator<T>::setValues(T values[]) {
 		 *   -> Do nothing
 		 * 2 - Bar is raising to a lower value
 		 *   -> Start a new movement from its current value
-		 *      If movement has constant acceleration, set velocity to 0
-		 *      If movement has constant velocity, set velocity to initial velocity
+		 *      Set target displacement to the new displacement value
+		 *      If movement has constant acceleration, set velocity to new calculated value using calculateInitialVelocity method
+		 *      If movement has constant velocity, do nothing
 		 * 3 - Bar is falling and currently has higher or equal value
 		 *   -> Do nothing
 		 * 4 - Bar is falling and currently has a lower value
 		 *   -> Start a new movement from its current value
+		 *      Set target displacement to the new displacement value
 		 *      If movement has constant acceleration, set velocity to 0
-		 *      If movement has constant velocity, set velocity to initial velocity
+		 *      If movement has constant velocity, do nothing
 		 * 5 - Bar is stationary
 		 *   -> Start a new movement from position 0
 		 */
@@ -135,17 +137,20 @@ inline void SpectrumAnalyzerAnimator<T>::setValues(T values[]) {
 				if(motion.targetDisplacement >= valueToBeSet) // Case 1
 					continue;
 				// Case 2:
-				//if(raisingMotionProperties)
+				startMotion(motion, valueToBeSet);
 				break;
 			}
 			case MotionRotation::Falling: {
 				if(motion.targetDisplacement >= valueToBeSet) // Case 3
 					continue;
 				// Case 4
+				startMotion(motion, valueToBeSet);
 				break;
 			}
 			case MotionRotation::Stationary: {
 				// Case 5
+				motion.displacement = 0;
+				startMotion(motion, valueToBeSet);
 				break;
 			}
 		}
@@ -203,9 +208,9 @@ inline void SpectrumAnalyzerAnimator<T>::startFalling(Motion<T> &motion) {
 }
 
 template<typename T>
-inline void SpectrumAnalyzerAnimator<T>::startMovement(Motion<T> &motion, T targetDisplacement) {
+inline void SpectrumAnalyzerAnimator<T>::startMotion(Motion<T> &motion, T targetDisplacement) {
 	motion.targetDisplacement = targetDisplacement;
-	motion.movementType = MotionRotation::Raising;
+	motion.motionRotation = MotionRotation::Raising;
 	T totalDisplacementDelta = motion.targetDisplacement - motion.displacement;
 	switch(raisingMotionProperties.motionType) {
 		case MotionType::ConstantVelocity:
