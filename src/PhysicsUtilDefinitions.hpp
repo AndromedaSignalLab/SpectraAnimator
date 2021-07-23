@@ -14,17 +14,17 @@ T PhysicsUtil<T>::calculateVelocity(T lastVelocity, T acceleration, T timePassed
 }
 
 template<typename T>
-T PhysicsUtil<T>::calculateDisplacementDelta(T velocity, T timePassed) {
+T PhysicsUtil<T>::calculateDistance(T velocity, T timePassed) {
 	return velocity * timePassed;
 }
 
 template<typename T>
-T PhysicsUtil<T>::calculateDisplacementDelta(T lastVelocity, T acceleration, T timePassed) {
+T PhysicsUtil<T>::calculateDistance(T lastVelocity, T acceleration, T timePassed) {
 	return lastVelocity*timePassed + 0.5 * acceleration * timePassed * timePassed;
 }
 
 template<typename T>
 T PhysicsUtil<T>::calculateInitialVelocity(T distance, T acceleration) {
 	//V₀ = √(2Xa)
-	return std::sqrt(distance*acceleration*2.0);
+	return std::sqrt(std::abs(distance*acceleration*2.0));
 }

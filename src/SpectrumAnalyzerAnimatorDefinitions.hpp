@@ -207,12 +207,12 @@ template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::startMotion(Motion<T> &motion, T targetDisplacement) {
 	motion.targetDisplacement = targetDisplacement;
 	motion.motionRotation = MotionRotation::Raising;
-	T totalDisplacementDelta = motion.targetDisplacement - motion.displacement;
+	T totalDistance = motion.targetDisplacement - motion.displacement;
 	switch(raisingMotionProperties.motionType) {
 		case MotionType::ConstantVelocity:
 			break;
 		case MotionType::ConstantAcceleration:
-			motion.velocityWithAcceleration = PhysicsUtil<double>::calculateInitialVelocity(totalDisplacementDelta, raisingMotionProperties.acceleration);
+			motion.velocityWithAcceleration = PhysicsUtil<double>::calculateInitialVelocity(totalDistance, raisingMotionProperties.acceleration);
 			break;
 		case MotionType::Instant:
 			break;
@@ -227,7 +227,7 @@ inline void SpectrumAnalyzerAnimator<T>::updateMotions() {
 		if(motion.motionRotation == MotionRotation::Raising) {
 			switch(raisingMotionProperties.motionType) {
 				case MotionType::ConstantVelocity: {
-					motion.displacement += PhysicsUtil<double>::calculateDisplacementDelta(raisingMotionProperties.initialVelocity, lastDuration);
+					motion.displacement += PhysicsUtil<double>::calculateDistance(raisingMotionProperties.initialVelocity, lastDuration);
 					if(motion.displacement >= motion.targetDisplacement) {
 						motion.displacement = motion.targetDisplacement;
 						startFalling(motion);
@@ -237,7 +237,7 @@ inline void SpectrumAnalyzerAnimator<T>::updateMotions() {
 				case MotionType::ConstantAcceleration: {
 					double previousVelocity = motion.velocityWithAcceleration;
 					motion.velocityWithAcceleration = PhysicsUtil<double>::calculateVelocity(motion.velocityWithAcceleration, raisingMotionProperties.acceleration, lastDuration);
-					motion.displacement += PhysicsUtil<double>::calculateDisplacementDelta(previousVelocity, raisingMotionProperties.acceleration, lastDuration);
+					motion.displacement += PhysicsUtil<double>::calculateDistance(previousVelocity, raisingMotionProperties.acceleration, lastDuration);
 					if(motion.displacement >= motion.targetDisplacement) {
 						motion.displacement = motion.targetDisplacement;
 						startFalling(motion);
@@ -252,7 +252,7 @@ inline void SpectrumAnalyzerAnimator<T>::updateMotions() {
 		else if(motion.motionRotation == MotionRotation::Falling) {
 			switch(fallingMotionProperties.motionType) {
 				case MotionType::ConstantVelocity: {
-					motion.displacement += PhysicsUtil<double>::calculateDisplacementDelta(fallingMotionProperties.initialVelocity, lastDuration);
+					motion.displacement += PhysicsUtil<double>::calculateDistance(fallingMotionProperties.initialVelocity, lastDuration);
 					if(motion.displacement <= motion.targetDisplacement) {
 						motion.displacement = motion.targetDisplacement;
 						motion.motionRotation = MotionRotation::Stationary;
@@ -263,7 +263,7 @@ inline void SpectrumAnalyzerAnimator<T>::updateMotions() {
 				case MotionType::ConstantAcceleration: {
 					double previousVelocity = motion.velocityWithAcceleration;
 					motion.velocityWithAcceleration = PhysicsUtil<double>::calculateVelocity(motion.velocityWithAcceleration, fallingMotionProperties.acceleration, lastDuration);
-					motion.displacement += PhysicsUtil<double>::calculateDisplacementDelta(previousVelocity, fallingMotionProperties.acceleration, lastDuration);
+					motion.displacement += PhysicsUtil<double>::calculateDistance(previousVelocity, fallingMotionProperties.acceleration, lastDuration);
 					if(motion.displacement <= motion.targetDisplacement) {
 						motion.displacement = motion.targetDisplacement;
 						motion.motionRotation = MotionRotation::Stationary;
