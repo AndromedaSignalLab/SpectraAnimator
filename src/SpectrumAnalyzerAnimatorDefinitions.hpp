@@ -137,7 +137,7 @@ inline void SpectrumAnalyzerAnimator<T>::setValues(T values[]) {
 				break;
 			}
 			case MotionRotation::Falling: {
-				if(motion.targetDisplacement >= valueToBeSet) // Case 3
+				if(motion.displacement >= valueToBeSet) // Case 3
 					continue;
 				// Case 4
 				startMotion(motion, valueToBeSet);
