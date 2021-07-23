@@ -9,6 +9,7 @@
 
 #include "SpectrumAnalyzerAnimator.hpp"
 #include "PhysicsUtil"
+//#include <iostream>
 
 template<typename T>
 T SpectrumAnalyzerAnimator<T>::getMaxValue() const {
@@ -150,23 +151,6 @@ inline void SpectrumAnalyzerAnimator<T>::setValues(T values[]) {
 				break;
 			}
 		}
-
-		if(motion.motionRotation == MotionRotation::Raising) { //Case 1 and 2
-			// Case 1:
-			if(motion.targetDisplacement >= valueToBeSet)
-				continue;
-
-			// Case 2:
-			if(motion.targetDisplacement < valueToBeSet){
-
-			}
-		}
-
-
-		if(valueToBeSet > motion.targetDisplacement) { //higher value to be set
-			motion.motionRotation = MotionRotation::Raising;
-			motion.targetDisplacement = valueToBeSet;
-		}
 	}
 	valueSettingMutex.unlock();
 }
@@ -190,6 +174,7 @@ inline void SpectrumAnalyzerAnimator<T>::updateTimePoints() {
 
 template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::startFalling(Motion<T> &motion) {
+    //std::clog<<"Starting to fall"<<std::endl;
 	motion.targetDisplacement = minValue;
 	motion.motionRotation = MotionRotation::Falling;
 	switch(fallingMotionProperties.motionType) {
@@ -207,7 +192,7 @@ template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::startMotion(Motion<T> &motion, T targetDisplacement) {
 	motion.targetDisplacement = targetDisplacement;
 	motion.motionRotation = MotionRotation::Raising;
-	T totalDistance = motion.targetDisplacement - motion.displacement;
+	T totalDistance = targetDisplacement - motion.displacement;
 	switch(raisingMotionProperties.motionType) {
 		case MotionType::ConstantVelocity:
 			break;
@@ -236,10 +221,11 @@ inline void SpectrumAnalyzerAnimator<T>::updateMotions() {
 				}
 				case MotionType::ConstantAcceleration: {
 					double previousVelocity = motion.velocityWithAcceleration;
-					motion.velocityWithAcceleration = PhysicsUtil<double>::calculateVelocity(motion.velocityWithAcceleration, raisingMotionProperties.acceleration, lastDuration);
-					motion.displacement += PhysicsUtil<double>::calculateDistance(previousVelocity, raisingMotionProperties.acceleration, lastDuration);
-					if(motion.displacement >= motion.targetDisplacement) {
-						motion.displacement = motion.targetDisplacement;
+					motion.velocityWithAcceleration = PhysicsUtil<double>::calculateVelocity(previousVelocity, raisingMotionProperties.acceleration, lastDuration);
+                    motion.displacement += std::abs(PhysicsUtil<double>::calculateDistance(previousVelocity, raisingMotionProperties.acceleration, lastDuration));
+                    //std::clog<<"Displacement " <<motion.displacement<<std::endl;
+                    if(motion.displacement >= motion.targetDisplacement) {
+                        motion.displacement = motion.targetDisplacement;
 						startFalling(motion);
 					}
 					break;
@@ -278,5 +264,6 @@ inline void SpectrumAnalyzerAnimator<T>::updateMotions() {
 		else { //Stationary
 			//Do nothing
 		}
+        //std::clog<< "Motion Rotation " << (int) motion.motionRotation<<std::endl;
 	}
 }

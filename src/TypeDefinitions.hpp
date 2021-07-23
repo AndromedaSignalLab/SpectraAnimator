@@ -32,9 +32,9 @@ enum class PeakIndicatorType {
 };
 
 enum class MotionRotation {
-	Stationary,
-	Raising,
-	Falling
+	Stationary = 0,
+	Raising = 1,
+	Falling = -1
 };
 
 /**
