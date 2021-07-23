@@ -35,8 +35,8 @@ public:
 private:
 	void updateMotions();
 	void updateTimePoints();
-	void startFalling(Motion<T> &movement);
-	void startMotion(Motion<T> &movement, T targetDisplacement);
+	void startFalling(Motion<T> &motion);
+	void startMotion(Motion<T> &motion, T targetDisplacement);
 	size_t bandAmount;
 	MotionProperties raisingMotionProperties, fallingMotionProperties;
 	PeakIndicatorType peakIndicatorType;

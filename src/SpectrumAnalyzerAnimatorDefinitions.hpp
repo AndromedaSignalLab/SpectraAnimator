@@ -100,10 +100,6 @@ inline void SpectrumAnalyzerAnimator<T>::stop() {
 	}
 }
 
-void startMovement() {
-
-}
-
 template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::setValues(T values[]) {
 	valueSettingMutex.lock();
