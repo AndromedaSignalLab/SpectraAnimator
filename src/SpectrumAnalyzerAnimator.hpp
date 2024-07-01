@@ -19,8 +19,9 @@ public:
 	void setBandAmount(size_t bandAmount);
 	size_t getBandAmount() const;
 
-	void start();
-	void stop();
+    void start();
+    void restart();
+    void stop();
 	void setValues(T values[]);
 	void getValues(T values[]);
 

@@ -95,14 +95,37 @@ inline void SpectrumAnalyzerAnimator<T>::start() {
 	if(!running) {
 		updateTimePoints();
 		running = true;
-	}
+    }
+    else {
+        stop();
+    }
+}
+
+template<typename T>
+void SpectrumAnalyzerAnimator<T>::restart()
+{
+    valueSettingMutex.lock();
+    for(size_t i=0; i<bandAmount; i++) {
+        motions[i].targetDisplacement = 0;
+        motions[i].displacement = 0;
+    }
+    valueSettingMutex.unlock();
+    updateMotions();
 }
 
 template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::stop() {
-	if(running) {
-		running = false;
-	}
+    if(running) {
+        running = false;
+    }
+
+    valueSettingMutex.lock();
+    updateMotions();
+    for(size_t i=0; i<bandAmount; i++) {
+        motions[i].targetDisplacement = 0;
+        motions[i].displacement = 0;
+    }
+    valueSettingMutex.unlock();
 }
 
 template<typename T>
