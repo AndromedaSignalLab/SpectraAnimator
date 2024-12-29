@@ -46,16 +46,17 @@ enum class MotionRotation {
  * For example, 0.5 means bar goes to its half height from zero in a second.
  * -0.5 means velocity has opposite direction (from up to bottom direction)
  */
+template<typename T>
 struct MotionProperties {
 	MotionType motionType;
-	double acceleration = 0.0;
-	double initialVelocity = 0.0;
+    T acceleration = 0.0;
+    T initialVelocity = 0.0;
 };
 
 template<typename T>
 struct Motion {
 	MotionRotation motionRotation = MotionRotation::Stationary;
-	T velocityWithAcceleration = 0; //ignored for constant velocity
-	T displacement = 0;
-	T targetDisplacement = 0;
+    T velocityWithAcceleration = T(0); //ignored for constant velocity
+    T displacement = T(0);
+    T targetDisplacement = T(0);
 };

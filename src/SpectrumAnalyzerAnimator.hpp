@@ -33,21 +33,22 @@ public:
 	PeakIndicatorType getPeakIndicatorType() const;
 	void setPeakIndicatorType(PeakIndicatorType peakIndicatorType);
 
-	void setFallingMotionProperties(MotionProperties fallingMotionProperties);
-	void setRaisingMotionProperties(MotionProperties raisingMotionProperties);
+    void setFallingMotionProperties(MotionProperties<T> fallingMotionProperties);
+    void setRaisingMotionProperties(MotionProperties<T> raisingMotionProperties);
 
 private:
 	void updateMotions();
 	void updateTimePoints();
+    void startTimePoints();
 	void startFalling(Motion<T> &motion);
 	void startMotion(Motion<T> &motion, T targetDisplacement);
-	size_t bandAmount;
-	MotionProperties raisingMotionProperties, fallingMotionProperties;
+    size_t bandAmount = 0;
+    MotionProperties<T> raisingMotionProperties, fallingMotionProperties;
 	PeakIndicatorType peakIndicatorType;
-	TimePoint previousTimePoint, currentTimePoint;
-	double lastDuration;
-	T minValue, maxValue;
-	Motion<T> * motions;
-	bool running;
+    TimePoint previousTimePoint, currentTimePoint;
+    double lastDuration = 0;
+    T minValue = 0, maxValue = 0;
+    Motion<T> * motions = nullptr;
+    bool running = false;
 	std::mutex valueSettingMutex;
 };

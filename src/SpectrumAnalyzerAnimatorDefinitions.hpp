@@ -38,13 +38,13 @@ void SpectrumAnalyzerAnimator<T>::setMinValue(T minValue) {
 
 template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::setFallingMotionProperties(
-		MotionProperties fallingMotionProperties) {
+        MotionProperties<T> fallingMotionProperties) {
 	this->fallingMotionProperties = fallingMotionProperties;
 }
 
 template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::setRaisingMotionProperties(
-		MotionProperties raisingMotionProperties) {
+        MotionProperties<T> raisingMotionProperties) {
 	this->raisingMotionProperties = raisingMotionProperties;
 }
 
@@ -67,7 +67,7 @@ inline SpectrumAnalyzerAnimator<T>::SpectrumAnalyzerAnimator(size_t bandAmount,
 	this->maxValue = maxValue;
 	fallingMotionProperties.motionType = MotionType::ConstantVelocity;
 	raisingMotionProperties.motionType = MotionType::ConstantVelocity;
-	this->lastDuration = 0.0;
+    this->lastDuration = T(0.0);
 	this->peakIndicatorType = PeakIndicatorType::NoPeakIndicator;
 	this->running = false;
 }
@@ -94,7 +94,7 @@ inline size_t SpectrumAnalyzerAnimator<T>::getBandAmount() const {
 template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::start() {
 	if(!running) {
-		updateTimePoints();
+        startTimePoints();
 		running = true;
 	}
 }
@@ -112,10 +112,9 @@ inline void SpectrumAnalyzerAnimator<T>::setValues(T values[]) {
 
 	for(size_t i=0; i<bandAmount; i++) {
 		Motion<T> &motion = motions[i];
-		T &valueToBeSet = values[i];
-
-		/*
+        T &valueToBeSet = values[i];
         valueToBeSet = ModPlugPlayer::MathUtil::clamp<T>(valueToBeSet, minValue, maxValue);
+        /*
 		 * Cases:
 		 * 1 - Bar is raising to a higher or equal value
 		 *   -> Do nothing
@@ -171,6 +170,13 @@ inline void SpectrumAnalyzerAnimator<T>::getValues(T values[]) {
 }
 
 template<typename T>
+inline void SpectrumAnalyzerAnimator<T>::startTimePoints() {
+    previousTimePoint = Clock::now();
+    currentTimePoint = previousTimePoint;
+    lastDuration = 0.0;
+}
+
+template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::updateTimePoints() {
 	previousTimePoint = currentTimePoint;
 	currentTimePoint = Clock::now();
@@ -187,7 +193,7 @@ inline void SpectrumAnalyzerAnimator<T>::startFalling(Motion<T> &motion) {
 		case MotionType::ConstantVelocity:
 			break;
 		case MotionType::ConstantAcceleration:
-			motion.velocityWithAcceleration = 0;
+            motion.velocityWithAcceleration = T(0);
 			break;
 		case MotionType::Instant:
 			break;
@@ -196,7 +202,7 @@ inline void SpectrumAnalyzerAnimator<T>::startFalling(Motion<T> &motion) {
 
 template<typename T>
 inline void SpectrumAnalyzerAnimator<T>::startMotion(Motion<T> &motion, T targetDisplacement) {
-	motion.targetDisplacement = targetDisplacement;
+    motion.targetDisplacement = targetDisplacement;
 	motion.motionRotation = MotionRotation::Raising;
 	T totalDistance = targetDisplacement - motion.displacement;
 	switch(raisingMotionProperties.motionType) {

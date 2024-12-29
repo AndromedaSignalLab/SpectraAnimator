@@ -24,7 +24,7 @@ T PhysicsUtil<T>::calculateDistance(T velocity, T timePassed) {
 
 template<typename T>
 T PhysicsUtil<T>::calculateDistance(T lastVelocity, T acceleration, T timePassed) {
-	return lastVelocity*timePassed + 0.5 * acceleration * timePassed * timePassed;
+    return lastVelocity*timePassed + T(0.5) * acceleration * timePassed * timePassed;
 }
 
 template<typename T>
