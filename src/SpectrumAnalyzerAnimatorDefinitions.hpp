@@ -14,6 +14,7 @@ You should have received a copy of the GNU Lesser General Public License along w
 #include "SpectrumAnalyzerAnimator.hpp"
 #include "PhysicsUtil"
 //#include <iostream>
+#include <Util/MathUtil.hpp>
 
 template<typename T>
 T SpectrumAnalyzerAnimator<T>::getMaxValue() const {
@@ -114,6 +115,7 @@ inline void SpectrumAnalyzerAnimator<T>::setValues(T values[]) {
 		T &valueToBeSet = values[i];
 
 		/*
+        valueToBeSet = ModPlugPlayer::MathUtil::clamp<T>(valueToBeSet, minValue, maxValue);
 		 * Cases:
 		 * 1 - Bar is raising to a higher or equal value
 		 *   -> Do nothing
