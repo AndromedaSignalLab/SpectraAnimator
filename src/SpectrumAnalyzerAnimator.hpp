@@ -52,3 +52,5 @@ private:
     bool running = false;
 	std::mutex valueSettingMutex;
 };
+
+#include "SpectrumAnalyzerAnimatorDefinitions.hpp"
