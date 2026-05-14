@@ -24,7 +24,7 @@ typedef std::chrono::high_resolution_clock Clock;
 typedef std::chrono::time_point<std::chrono::high_resolution_clock> TimePoint;
 
 enum class MotionType {
-	Instant,//Jumpy
+	Instant,//Flickering
 	ConstantAcceleration,
 	ConstantVelocity
 };
@@ -48,7 +48,7 @@ enum class MotionRotation {
  */
 template<typename T>
 struct MotionProperties {
-	MotionType motionType;
+	MotionType motionType = MotionType::ConstantAcceleration;
     T acceleration = 0.0;
     T initialVelocity = 0.0;
 };
